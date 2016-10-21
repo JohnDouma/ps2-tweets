@@ -1,0 +1,13 @@
+.*
+
+!.gitignore
+
+*.xml
+
+bin
+
+*.jar
+
+*.class
+
+*.zip
