@@ -107,6 +107,41 @@ public class FilterTest {
         assertEquals("expected same order", 0, inTimespan.indexOf(tweet1));
     }
     
+    /*
+     * Testing strategy for containing
+     * Test empty word list
+     * Test empty tweet list
+     * Test multiple matches in one tweet
+     * Test no matches
+     */
+    
+    @Test
+    public void testContainingEmptyWordList() {
+    	List<Tweet> containing = Filter.containing(Arrays.asList(tweet1, tweet2), new ArrayList<String>());
+    	assertTrue(containing.isEmpty());
+    }
+    
+    @Test
+    public void testContainingEmptyTweetList() {
+    	List<Tweet> containing = Filter.containing(new ArrayList<Tweet>(), Arrays.asList("this", "should", "be", "empty"));
+    	assertTrue(containing.isEmpty());
+    }
+    
+    @Test
+    public void testContainingMultipleMatchesOneTweet() {
+    	List<Tweet> containing = Filter.containing(Arrays.asList(tweet1), Arrays.asList("talk", "so", "much?"));
+    	
+    	assertEquals(1, containing.size());
+    	assertTrue(containing.contains(tweet1));
+    }
+    
+    @Test 
+    public void testContainingNoMatches() {
+    	List<Tweet> containing = Filter.containing(Arrays.asList(tweet1, tweet2), Arrays.asList("no", "matches"));
+    	
+    	assertTrue(containing.isEmpty());
+    }
+    
     @Test
     public void testContaining() {
         List<Tweet> containing = Filter.containing(Arrays.asList(tweet1, tweet2), Arrays.asList("talk"));

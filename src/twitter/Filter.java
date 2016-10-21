@@ -2,6 +2,7 @@ package twitter;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import java.time.Instant;
 
@@ -54,7 +55,7 @@ public class Filter {
         final Instant end = timespan.getEnd();
         for (Tweet tweet: tweets) {
         	tweetTime = tweet.getTimestamp();
-        	if (tweetTime.equals(start) || tweetTime.isAfter(start) || tweetTime.isBefore(end) || tweetTime.equals(end)) {
+        	if ((tweetTime.equals(start) || tweetTime.isAfter(start)) && (tweetTime.isBefore(end) || tweetTime.equals(end))) {
         		filteredTweets.add(tweet);
         	}
         }
@@ -78,7 +79,25 @@ public class Filter {
      *         same order as in the input list.
      */
     public static List<Tweet> containing(List<Tweet> tweets, List<String> words) {
-        throw new RuntimeException("not implemented");
+    	final List<Tweet> filtered = new ArrayList<Tweet>();
+        HashSet<String> wordsInTweet = null;
+        String[] tweetWords = null;
+        for (Tweet tweet: tweets) {
+        	wordsInTweet = new HashSet<String>();
+        	tweetWords = tweet.getText().split("\\s+");
+        	for (int i = 0; i < tweetWords.length; i++) {
+        		wordsInTweet.add(tweetWords[i]);
+        	}
+        	
+        	for (String word: words) {
+        		if (wordsInTweet.contains(word)) {
+        			filtered.add(tweet);
+        			break;
+        		}
+        	}
+        }
+        
+        return filtered;
     }
 
     /* Copyright (c) 2007-2016 MIT 6.005 course staff, all rights reserved.
