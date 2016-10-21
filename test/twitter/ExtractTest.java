@@ -20,11 +20,20 @@ public class ExtractTest {
     
     private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
     private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
+    private static final Tweet tweet3 = new Tweet(3, "alyssa", "is it reasonable to talk about rivest so much?", d1);
+    private static final Tweet tweet4 = new Tweet(4, "bbitdiddle", "rivest talk in 30 minutes #hype", d1);
     
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
         assert false; // make sure assertions are enabled with VM argument: -ea
     }
+    
+    /*
+     * Testing strategy for getTimespan
+     * Test with list of length 1 and list with length greater than 1
+     * Test with time stamps in order and out of order
+     * Test with multiple tweets with same time stamp
+     */
     
     @Test
     public void testGetTimespanTwoTweets() {
@@ -33,6 +42,35 @@ public class ExtractTest {
         assertEquals("expected start", d1, timespan.getStart());
         assertEquals("expected end", d2, timespan.getEnd());
     }
+    
+    @Test
+    public void testGetTimespanTwoTweetsOutOfOrder() {
+        Timespan timespan = Extract.getTimespan(Arrays.asList(tweet2, tweet1));
+        
+        assertEquals("expected start", d1, timespan.getStart());
+        assertEquals("expected end", d2, timespan.getEnd());
+    }
+    
+    @Test
+    public void testGetTimespanOneTweet() {
+    	Timespan timespan = Extract.getTimespan(Arrays.asList(tweet1));
+    	
+    	assertEquals(d1, timespan.getStart());
+    	assertEquals(d1, timespan.getEnd());
+    }
+    
+    @Test
+    public void testGetTimespanThreeTweetsSameTimestamp() {
+    	Timespan timespan = Extract.getTimespan(Arrays.asList(tweet1, tweet3, tweet4));
+    	
+    	assertEquals(d1, timespan.getStart());
+    	assertEquals(d1, timespan.getEnd());
+    }
+    
+    /*
+     * Testing strategy for testGetMentionedUsersNoMention
+     * 
+     */
     
     @Test
     public void testGetMentionedUsersNoMention() {
