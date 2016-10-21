@@ -3,6 +3,8 @@ package twitter;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.time.Instant;
+
 /**
  * Filter consists of methods that filter a list of tweets for those matching a
  * condition.
@@ -46,7 +48,18 @@ public class Filter {
      *         in the same order as in the input list.
      */
     public static List<Tweet> inTimespan(List<Tweet> tweets, Timespan timespan) {
-        throw new RuntimeException("not implemented");
+        final List<Tweet> filteredTweets = new ArrayList<Tweet>();
+        Instant tweetTime;
+        final Instant start = timespan.getStart();
+        final Instant end = timespan.getEnd();
+        for (Tweet tweet: tweets) {
+        	tweetTime = tweet.getTimestamp();
+        	if (tweetTime.equals(start) || tweetTime.isAfter(start) || tweetTime.isBefore(end) || tweetTime.equals(end)) {
+        		filteredTweets.add(tweet);
+        	}
+        }
+        
+        return filteredTweets;
     }
 
     /**

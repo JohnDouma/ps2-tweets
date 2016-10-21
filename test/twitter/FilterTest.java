@@ -67,6 +67,34 @@ public class FilterTest {
     	assertEquals(0, writtenBy.size());
     }
     
+    /*
+     * Testing strategy for inTimespan
+     * Test empty list
+     * Test no results
+     * Test multiple results
+     */
+    
+    @Test
+    public void testInTimespanEmptyList() {
+    	Instant testStart = Instant.parse("2016-02-17T09:00:00Z");
+        Instant testEnd = Instant.parse("2016-02-17T12:00:00Z");
+    	List<Tweet> tweets = new ArrayList<Tweet>();
+    	
+    	List<Tweet> filtered = Filter.inTimespan(tweets, new Timespan(testStart, testEnd));
+    	
+    	assertTrue(filtered.isEmpty());
+    }
+    
+    @Test
+    public void testInTimespanNoResults() {
+    	Instant testStart = Instant.parse("2015-02-17T09:00:00Z");
+        Instant testEnd = Instant.parse("2015-02-17T12:00:00Z");
+        
+        List<Tweet> inTimespan = Filter.inTimespan(Arrays.asList(tweet1, tweet2, tweet3), new Timespan(testStart, testEnd));
+        
+        assertTrue(inTimespan.isEmpty());
+    }
+    
     @Test
     public void testInTimespanMultipleTweetsMultipleResults() {
         Instant testStart = Instant.parse("2016-02-17T09:00:00Z");
