@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -20,10 +21,26 @@ public class FilterTest {
     
     private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
     private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
+    private static final Tweet tweet3 = new Tweet(3, "alyssa", "is it reasonable to talk about rivest so much?", d1);
     
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
         assert false; // make sure assertions are enabled with VM argument: -ea
+    }
+    
+    /*
+     * Testing strategy for writtenBy
+     * Test empty list
+     * Test multiple tweets with single result
+     * Test multiple tweets with multiple results
+     * Test multiple tweets with no matches
+     */
+    
+    @Test
+    public void testWrittenByEmptyList() {
+        List<Tweet> authors = Filter.writtenBy(new ArrayList<Tweet>(), "alyssa");
+        
+        assertTrue(authors.size() == 0);
     }
     
     @Test
@@ -32,6 +49,22 @@ public class FilterTest {
         
         assertEquals("expected singleton list", 1, writtenBy.size());
         assertTrue("expected list to contain tweet", writtenBy.contains(tweet1));
+    }
+    
+    @Test
+    public void testWrittenByMultipleResults() {
+    	List<Tweet> writtenBy = Filter.writtenBy(Arrays.asList(tweet1, tweet2, tweet3), "alyssa");
+    	
+    	assertEquals(2, writtenBy.size());
+    	assertTrue(writtenBy.contains(tweet1));
+    	assertTrue(writtenBy.contains(tweet3));
+    }
+    
+    @Test
+    public void testWrittenByNoResults() {
+        List<Tweet> writtenBy = Filter.writtenBy(Arrays.asList(tweet1, tweet2, tweet3), "john");
+    	
+    	assertEquals(0, writtenBy.size());
     }
     
     @Test
