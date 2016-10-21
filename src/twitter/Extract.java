@@ -68,7 +68,7 @@ public class Extract {
         for (Tweet tweet: tweets) {
         	 nameMatcher = authorRegexp.matcher(tweet.getText());
         	 while (nameMatcher.find()) {
-        		 usernames.add(nameMatcher.group().toLowerCase().trim());
+        		 usernames.add(nameMatcher.group().toLowerCase().trim().substring(1));
         	 }
         }
         

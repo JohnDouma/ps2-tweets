@@ -94,8 +94,8 @@ public class ExtractTest {
         Set<String> users = Extract.getMentionedUsers(Arrays.asList(multipleUsers));	
         
         assertTrue(users.size() == 2);
-        assertTrue(users.contains("@reasonable"));
-        assertTrue(users.contains("@rivest"));
+        assertTrue(users.contains("reasonable"));
+        assertTrue(users.contains("rivest"));
     }
     
     @Test
@@ -103,7 +103,7 @@ public class ExtractTest {
     	Set<String> users = Extract.getMentionedUsers(Arrays.asList(userjohn, userJohn));
     	
     	assertTrue(users.size() == 1);
-        assertTrue(users.contains("@john-"));
+        assertTrue(users.contains("john-"));
     }
     
     @Test
@@ -111,7 +111,7 @@ public class ExtractTest {
         Set<String> users = Extract.getMentionedUsers(Arrays.asList(emailAddress));
     	
     	assertTrue(users.size() == 1);
-        assertTrue(users.contains("@tal_k"));
+        assertTrue(users.contains("tal_k"));
     }
 
     /*
