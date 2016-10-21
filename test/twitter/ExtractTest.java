@@ -69,14 +69,49 @@ public class ExtractTest {
     
     /*
      * Testing strategy for testGetMentionedUsersNoMention
+     * Test with no authors mentioned
+     * Test with multiple authors in the same tweet.
+     * Test with two instances of same author
+     * Test with two instances of same author but different case, e.g @Bitdiddle, @bitdiddle
+     * Test that email addresses do not appear
      * 
      */
+    
+    private static final Tweet userjohn = new Tweet(5, "alyssa", "is it reasonable to talk about @john- so much?", d1);
+    private static final Tweet userJohn = new Tweet(6, "bbitdiddle", "@John- talk in 30 minutes #hype", d1);
+    private static final Tweet multipleUsers = new Tweet(7, "alyssa", "is it @reasonable to talk about @rivest so much?", d1);
+    private static final Tweet emailAddress = new Tweet(8, "bbitdiddle", "rivest@mit.edu @tal_k in 30 minutes #hype", d1);
     
     @Test
     public void testGetMentionedUsersNoMention() {
         Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet1));
         
         assertTrue("expected empty set", mentionedUsers.isEmpty());
+    }
+    
+    @Test
+    public void testGetMentionedUsersMultipleUsersSameTweet() {
+        Set<String> users = Extract.getMentionedUsers(Arrays.asList(multipleUsers));	
+        
+        assertTrue(users.size() == 2);
+        assertTrue(users.contains("@reasonable"));
+        assertTrue(users.contains("@rivest"));
+    }
+    
+    @Test
+    public void testGetMentionedUsersSameUserDifferentCase() {
+    	Set<String> users = Extract.getMentionedUsers(Arrays.asList(userjohn, userJohn));
+    	
+    	assertTrue(users.size() == 1);
+        assertTrue(users.contains("@john-"));
+    }
+    
+    @Test
+    public void testGetMentionedUsersFilterEmails() {
+        Set<String> users = Extract.getMentionedUsers(Arrays.asList(emailAddress));
+    	
+    	assertTrue(users.size() == 1);
+        assertTrue(users.contains("@tal_k"));
     }
 
     /*

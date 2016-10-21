@@ -2,6 +2,9 @@ package twitter;
 
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.HashSet;
 import java.time.Instant;
 
 /**
@@ -12,6 +15,8 @@ import java.time.Instant;
  * private methods or classes if you like.
  */
 public class Extract {
+	
+	private static final Pattern authorRegexp = Pattern.compile("[^A-Za-z-_]@[A-Za-z-_]+[^A-Za-z-_]");
 
     /**
      * Get the time period spanned by tweets.
@@ -58,7 +63,16 @@ public class Extract {
      *         include a username at most once.
      */
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        Set<String> usernames = new HashSet<String>();
+        Matcher nameMatcher = null;
+        for (Tweet tweet: tweets) {
+        	 nameMatcher = authorRegexp.matcher(tweet.getText());
+        	 while (nameMatcher.find()) {
+        		 usernames.add(nameMatcher.group().toLowerCase().trim());
+        	 }
+        }
+        
+        return usernames;
     }
 
     /* Copyright (c) 2007-2016 MIT 6.005 course staff, all rights reserved.
