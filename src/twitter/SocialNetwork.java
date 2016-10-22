@@ -1,5 +1,6 @@
 package twitter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -12,11 +13,11 @@ import java.util.Set;
  * A social network is represented by a Map<String, Set<String>> where map[A] is
  * the set of people that person A follows on Twitter, and all people are
  * represented by their Twitter usernames. Users can't follow themselves. If A
- * doesn't follow anybody, then map[A] may be the empty set, or A may not even exist
- * as a key in the map; this is true even if A is followed by other people in the network.
- * Twitter usernames are not case sensitive, so "ernie" is the same as "ERNie".
- * A username should appear at most once as a key in the map or in any given
- * map[A] set.
+ * doesn't follow anybody, then map[A] may be the empty set, or A may not even
+ * exist as a key in the map; this is true even if A is followed by other people
+ * in the network. Twitter usernames are not case sensitive, so "ernie" is the
+ * same as "ERNie". A username should appear at most once as a key in the map or
+ * in any given map[A] set.
  * 
  * DO NOT change the method signatures and specifications of these methods, but
  * you should implement their method bodies, and you may add new public or
@@ -32,31 +33,30 @@ public class SocialNetwork {
      *            method.
      * @return a social network (as defined above) in which Ernie follows Bert
      *         if and only if there is evidence for it in the given list of
-     *         tweets.
-     *         One kind of evidence that Ernie follows Bert is if Ernie
-     *         @-mentions Bert in a tweet. This must be implemented. Other kinds
-     *         of evidence may be used at the implementor's discretion.
-     *         All the Twitter usernames in the returned social network must be
-     *         either authors or @-mentions in the list of tweets.
+     *         tweets. One kind of evidence that Ernie follows Bert is if Ernie
+     * @-mentions Bert in a tweet. This must be implemented. Other kinds of
+     *            evidence may be used at the implementor's discretion. All the
+     *            Twitter usernames in the returned social network must be
+     *            either authors or @-mentions in the list of tweets.
      */
     public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
-        final Map<String, Set<String>> followsGraph = new HashMap<String, Set<String>> ();
-        
+        final Map<String, Set<String>> followsGraph = new HashMap<String, Set<String>>();
+
         String author = null;
         Set<String> mentionedUsers = null;
-        for (Tweet tweet: tweets) {
-        	author = tweet.getAuthor().trim().toLowerCase();
-        	mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet));
-        	if (mentionedUsers.contains(author)) {
-        		mentionedUsers.remove(author);
-        	}
-        	if (followsGraph.containsKey(author)) {
-        		followsGraph.get(author).addAll(mentionedUsers);
-        	} else {
-        		followsGraph.put(author, mentionedUsers);
-        	}
+        for (Tweet tweet : tweets) {
+            author = tweet.getAuthor().trim().toLowerCase();
+            mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet));
+            if (mentionedUsers.contains(author)) {
+                mentionedUsers.remove(author);
+            }
+            if (followsGraph.containsKey(author)) {
+                followsGraph.get(author).addAll(mentionedUsers);
+            } else {
+                followsGraph.put(author, mentionedUsers);
+            }
         }
-        
+
         return followsGraph;
     }
 
@@ -70,10 +70,55 @@ public class SocialNetwork {
      *         descending order of follower count.
      */
     public static List<String> influencers(Map<String, Set<String>> followsGraph) {
-        throw new RuntimeException("not implemented");
+        final List<String> greatestInfluencers = new ArrayList<String>();
+
+        final Map<String, Integer> influenceMap = new HashMap<String, Integer>();
+        Set<String> followsSet = null;
+        for (String author : followsGraph.keySet()) {
+            if (!influenceMap.containsKey(author)) {
+                influenceMap.put(author, 0);
+            }
+            followsSet = followsGraph.get(author);
+            for (String influencer : followsSet) {
+                if (influenceMap.containsKey(influencer)) {
+                    influenceMap.put(influencer, influenceMap.get(influencer) + 1);
+                } else {
+                    influenceMap.put(influencer, 1);
+                }
+            }
+        }
+
+        final Map<Integer, List<String>> countToAuthors = new HashMap<Integer, List<String>>();
+        int highestCount = 0;
+        int currentCount;
+        for (String author : influenceMap.keySet()) {
+            currentCount = influenceMap.get(author);
+            if (currentCount > highestCount) {
+                highestCount = currentCount;
+            }
+
+            if (countToAuthors.containsKey(currentCount)) {
+                countToAuthors.get(currentCount).add(author);
+            } else {
+                List<String> authorList = new ArrayList<String>();
+                authorList.add(author);
+                countToAuthors.put(currentCount, authorList);
+            }
+        }
+
+        List<String> authors = null;
+        for (int i = highestCount; i >= 0; i--) {
+            if (countToAuthors.containsKey(i)) {
+                authors = countToAuthors.get(i);
+                greatestInfluencers.addAll(authors);
+            }
+        }
+
+        return greatestInfluencers;
     }
 
-    /* Copyright (c) 2007-2016 MIT 6.005 course staff, all rights reserved.
+    /*
+     * Copyright (c) 2007-2016 MIT 6.005 course staff, all rights reserved.
      * Redistribution of original or derived work requires explicit permission.
      * Don't post any of this code on the web or to a public Github repository.
      */
