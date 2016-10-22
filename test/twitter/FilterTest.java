@@ -11,11 +11,6 @@ import org.junit.Test;
 
 public class FilterTest {
 
-    /*
-     * TODO: your testing strategies for these methods should go here.
-     * Make sure you have partitions.
-     */
-    
     private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
     private static final Instant d2 = Instant.parse("2016-02-17T11:00:00Z");
     

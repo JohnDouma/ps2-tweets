@@ -2,7 +2,9 @@ package twitter;
 
 import static org.junit.Assert.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,22 +13,48 @@ import java.util.Set;
 import org.junit.Test;
 
 public class SocialNetworkTest {
-
-    /*
-     * TODO: your testing strategies for these methods should go here.
-     * Make sure you have partitions.
-     */
+	
+	private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
+    private static final Instant d2 = Instant.parse("2016-02-17T11:00:00Z");
     
+    private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
+    private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
+    private static final Tweet tweet3 = new Tweet(3, "alyssa", "is it reasonable to talk about rivest so much?", d1);
+
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
         assert false; // make sure assertions are enabled with VM argument: -ea
     }
+    
+    /*
+     * Test strategy for guessFollowsGraph
+     * Test for empty list of tweets
+     * Test with author that follows no one
+     * Test with author that mentions himself
+     */
     
     @Test
     public void testGuessFollowsGraphEmpty() {
         Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(new ArrayList<>());
         
         assertTrue("expected empty graph", followsGraph.isEmpty());
+    }
+    
+    @Test
+    public void testGuessFollowsAuthorFollowsNoOne() {
+    	Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet1));
+    	
+    	assertTrue(followsGraph.containsKey(tweet1.getAuthor()));
+    	assertTrue(followsGraph.get(tweet1.getAuthor()).isEmpty());
+    }
+    
+    @Test
+    public void testGuessFollowsAuthorFollowsSelf() {
+    	final Tweet tweet = new Tweet(1, "alyssa", "is it reasonable to talk about @Alyssa so much?", d1);
+    	Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet));
+    	
+    	assertTrue(followsGraph.containsKey(tweet1.getAuthor()));
+    	assertTrue(followsGraph.get(tweet1.getAuthor()).isEmpty());
     }
     
     @Test
