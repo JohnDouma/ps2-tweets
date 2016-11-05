@@ -16,7 +16,7 @@ import java.time.Instant;
  */
 public class Extract {
 	
-	private static final Pattern authorRegexp = Pattern.compile("[^A-Za-z-_0-9]@[A-Za-z-_0-9]+");
+	private static final Pattern authorRegexp = Pattern.compile("([^A-Za-z-_0-9]|^)@[A-Za-z-_0-9]+");
 	private static final Pattern authorExtractionPattern = Pattern.compile("[A-Za-z-_0-9]+");
 
     /**

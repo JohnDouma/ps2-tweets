@@ -93,6 +93,7 @@ public class ExtractTest {
     private static final Tweet multipleUsers = new Tweet(7, "alyssa", "is it @reasonable to talk about @rivest so much?", d1);
     private static final Tweet emailAddress = new Tweet(8, "bbitdiddle", "rivest@mit.edu @tal_k in 30 minutes #hype", d1);
     private static final Tweet illegalName = new Tweet(9, "bbitdiddle", "hey @ashikyan! how you!", d1);
+    private static final Tweet nameWithPunctuation = new Tweet(10, "john", "@john@john@john!!!", d1);
     
     @Test
     public void testGetMentionedUsersNoMention() {
@@ -130,6 +131,13 @@ public class ExtractTest {
         for(String name: users) {
             assertEquals("ashikyan", name.toLowerCase());
         }
+    }
+    
+    @Test
+    public void testGetMentionedUsersNameWithPunctuation() {
+        Set<String> users = Extract.getMentionedUsers(Arrays.asList(nameWithPunctuation));
+        
+        assertEquals(1, users.size());
     }
 
     /*
