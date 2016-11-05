@@ -53,7 +53,6 @@ public class SocialNetworkTest {
         final Tweet tweet = new Tweet(1, "alyssa", "is it reasonable to talk about @Alyssa so much?", d1);
         Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet));
 
-        assertTrue(followsGraph.containsKey(tweet1.getAuthor()));
         assertTrue(followsGraph.get(tweet1.getAuthor()).isEmpty());
     }
 

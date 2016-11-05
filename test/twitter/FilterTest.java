@@ -17,6 +17,7 @@ public class FilterTest {
     private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
     private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
     private static final Tweet tweet3 = new Tweet(3, "alyssa", "is it reasonable to talk about rivest so much?", d1);
+    private static final Tweet tweet4 = new Tweet(4, "Alyssa", "is it reasonable to talk about rivest so much?", d1);
     
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
@@ -29,6 +30,7 @@ public class FilterTest {
      * Test multiple tweets with single result
      * Test multiple tweets with multiple results
      * Test multiple tweets with no matches
+     * Test multiple tweets with same author case insensitive
      */
     
     @Test
@@ -56,6 +58,13 @@ public class FilterTest {
     }
     
     @Test
+    public void testWrittenByCaseInsensitive() {
+        List<Tweet> writtenBy = Filter.writtenBy(Arrays.asList(tweet3, tweet4), "alyssa");
+        
+        assertEquals(2, writtenBy.size());
+    }
+    
+    @Test
     public void testWrittenByNoResults() {
         List<Tweet> writtenBy = Filter.writtenBy(Arrays.asList(tweet1, tweet2, tweet3), "john");
     	
@@ -67,6 +76,7 @@ public class FilterTest {
      * Test empty list
      * Test no results
      * Test multiple results
+     * Test correct order
      */
     
     @Test
@@ -102,12 +112,22 @@ public class FilterTest {
         assertEquals("expected same order", 0, inTimespan.indexOf(tweet1));
     }
     
+    @Test 
+    public void testInTimespanMultipleTweetsOneInstant() {
+        List<Tweet> inTimespan = Filter.inTimespan(Arrays.asList(tweet1, tweet3), new Timespan(d1, d1));
+        
+        assertFalse("expected non-empty list", inTimespan.isEmpty());
+        assertTrue("expected list to contain tweets", inTimespan.containsAll(Arrays.asList(tweet1, tweet3)));
+        assertEquals("expected same order", 0, inTimespan.indexOf(tweet1));
+    }
+    
     /*
      * Testing strategy for containing
      * Test empty word list
      * Test empty tweet list
      * Test multiple matches in one tweet
      * Test no matches
+     * Test word matches are not substrings
      */
     
     @Test
@@ -135,6 +155,13 @@ public class FilterTest {
     	List<Tweet> containing = Filter.containing(Arrays.asList(tweet1, tweet2), Arrays.asList("no", "matches"));
     	
     	assertTrue(containing.isEmpty());
+    }
+    
+    @Test
+    public void testContainingSubstringMatch() {
+        List<Tweet> containing = Filter.containing(Arrays.asList(tweet1), Arrays.asList("reason"));
+        
+        assertTrue(containing.isEmpty());
     }
     
     @Test

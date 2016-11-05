@@ -55,7 +55,7 @@ public class Filter {
         final Instant end = timespan.getEnd();
         for (Tweet tweet: tweets) {
         	tweetTime = tweet.getTimestamp();
-        	if ((tweetTime.equals(start) || tweetTime.isAfter(start)) && (tweetTime.isBefore(end) || tweetTime.equals(end))) {
+        	if (tweetTime.equals(start) || tweetTime.isAfter(start) && tweetTime.isBefore(end) || tweetTime.equals(end)) {
         		filteredTweets.add(tweet);
         	}
         }
