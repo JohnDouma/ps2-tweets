@@ -86,11 +86,11 @@ public class Filter {
         	wordsInTweet = new HashSet<String>();
         	tweetWords = tweet.getText().split("\\s+");
         	for (int i = 0; i < tweetWords.length; i++) {
-        		wordsInTweet.add(tweetWords[i]);
+        		wordsInTweet.add(tweetWords[i].toLowerCase());
         	}
         	
         	for (String word: words) {
-        		if (wordsInTweet.contains(word)) {
+        		if (wordsInTweet.contains(word.toLowerCase())) {
         			filtered.add(tweet);
         			break;
         		}
