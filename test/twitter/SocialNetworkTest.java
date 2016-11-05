@@ -44,8 +44,7 @@ public class SocialNetworkTest {
     public void testGuessFollowsAuthorFollowsNoOne() {
         Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet1));
 
-        assertTrue(followsGraph.containsKey(tweet1.getAuthor()));
-        assertTrue(followsGraph.get(tweet1.getAuthor()).isEmpty());
+        assertTrue(followsGraph.get(tweet1.getAuthor()) == null || followsGraph.get(tweet1.getAuthor()).isEmpty());
     }
 
     @Test
@@ -53,12 +52,14 @@ public class SocialNetworkTest {
         final Tweet tweet = new Tweet(1, "alyssa", "is it reasonable to talk about @Alyssa so much?", d1);
         Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet));
 
-        assertTrue(followsGraph.get(tweet1.getAuthor()).isEmpty());
+        assertTrue(followsGraph.get(tweet1.getAuthor()) == null || followsGraph.get(tweet1.getAuthor()).isEmpty());
     }
 
     /*
-     * Testing strategy for influencers Test with empty followsGraph Test with
-     * followsGraphs with no edges Test with clear winner for most influential
+     * Testing strategy for influencers 
+     * Test with empty followsGraph 
+     * Test with followsGraphs with no edges Test with clear winner for most 
+     *      influential
      */
 
     private final static Map<String, Set<String>> discreteGraph = new HashMap<String, Set<String>>() {
