@@ -75,15 +75,15 @@ public class SocialNetwork {
         final Map<String, Integer> influenceMap = new HashMap<String, Integer>();
         Set<String> followsSet = null;
         for (String author : followsGraph.keySet()) {
-            if (!influenceMap.containsKey(author)) {
-                influenceMap.put(author, 0);
+            if (!influenceMap.containsKey(author.toLowerCase())) {
+                influenceMap.put(author.toLowerCase(), 0);
             }
             followsSet = followsGraph.get(author);
             for (String influencer : followsSet) {
-                if (influenceMap.containsKey(influencer)) {
-                    influenceMap.put(influencer, influenceMap.get(influencer) + 1);
+                if (influenceMap.containsKey(influencer.toLowerCase())) {
+                    influenceMap.put(influencer.toLowerCase(), influenceMap.get(influencer.toLowerCase()) + 1);
                 } else {
-                    influenceMap.put(influencer, 1);
+                    influenceMap.put(influencer.toLowerCase(), 1);
                 }
             }
         }
