@@ -79,14 +79,14 @@ public class SocialNetworkTest {
 
     private final static Set<String> follows2 = new HashSet<String>() {
         {
-            add("Alice");
+            add("alice");
             add("Bob");
         }
     };
 
     private final static Set<String> follows3 = new HashSet<String>() {
         {
-            add("Alice");
+            add("AliCe");
         }
     };
 
