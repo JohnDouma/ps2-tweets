@@ -1,8 +1,10 @@
 package twitter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -30,10 +32,19 @@ public class ExtractTest {
     
     /*
      * Testing strategy for getTimespan
+     * Test with empty list of tweets
      * Test with list of length 1 and list with length greater than 1
      * Test with time stamps in order and out of order
      * Test with multiple tweets with same time stamp
      */
+    
+    @Test
+    public void testGetTimespanEmptyList() {
+       Timespan timespan = Extract.getTimespan(new ArrayList<Tweet>());
+       
+       assertTrue(!timespan.getStart().isAfter(timespan.getEnd()));
+       assertTrue(!timespan.getEnd().isAfter(timespan.getStart()));
+    }
     
     @Test
     public void testGetTimespanTwoTweets() {
@@ -74,13 +85,14 @@ public class ExtractTest {
      * Test with two instances of same author
      * Test with two instances of same author but different case, e.g @Bitdiddle, @bitdiddle
      * Test that email addresses do not appear
-     * 
+     * Test that user names are given in proper format
      */
     
     private static final Tweet userjohn = new Tweet(5, "alyssa", "is it reasonable to talk about @john- so much?", d1);
     private static final Tweet userJohn = new Tweet(6, "bbitdiddle", "@John- talk in 30 minutes #hype", d1);
     private static final Tweet multipleUsers = new Tweet(7, "alyssa", "is it @reasonable to talk about @rivest so much?", d1);
     private static final Tweet emailAddress = new Tweet(8, "bbitdiddle", "rivest@mit.edu @tal_k in 30 minutes #hype", d1);
+    private static final Tweet illegalName = new Tweet(9, "bbitdiddle", "hey @ashikyan! how you!", d1);
     
     @Test
     public void testGetMentionedUsersNoMention() {
@@ -94,8 +106,6 @@ public class ExtractTest {
         Set<String> users = Extract.getMentionedUsers(Arrays.asList(multipleUsers));	
         
         assertTrue(users.size() == 2);
-        assertTrue(users.contains("reasonable"));
-        assertTrue(users.contains("rivest"));
     }
     
     @Test
@@ -103,7 +113,6 @@ public class ExtractTest {
     	Set<String> users = Extract.getMentionedUsers(Arrays.asList(userjohn, userJohn));
     	
     	assertTrue(users.size() == 1);
-        assertTrue(users.contains("john-"));
     }
     
     @Test
@@ -111,7 +120,16 @@ public class ExtractTest {
         Set<String> users = Extract.getMentionedUsers(Arrays.asList(emailAddress));
     	
     	assertTrue(users.size() == 1);
-        assertTrue(users.contains("tal_k"));
+    }
+    
+    @Test
+    public void testGetMentionedUsersBadUsername() {
+        Set<String> users = Extract.getMentionedUsers(Arrays.asList(illegalName));
+        
+        assertTrue(users.size() == 1);
+        for(String name: users) {
+            assertEquals("ashikyan", name.toLowerCase());
+        }
     }
 
     /*

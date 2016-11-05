@@ -16,7 +16,8 @@ import java.time.Instant;
  */
 public class Extract {
 	
-	private static final Pattern authorRegexp = Pattern.compile("[^A-Za-z-_]@[A-Za-z-_]+[^A-Za-z-_]");
+	private static final Pattern authorRegexp = Pattern.compile("[^A-Za-z-_0-9]@[A-Za-z-_0-9]+");
+	private static final Pattern authorExtractionPattern = Pattern.compile("[A-Za-z-_0-9]+");
 
     /**
      * Get the time period spanned by tweets.
@@ -28,7 +29,8 @@ public class Extract {
      */
     public static Timespan getTimespan(List<Tweet> tweets) {
     	if (tweets.size() == 0) {
-    		return new Timespan(Instant.now(), Instant.now());
+    	    Instant now = Instant.now();
+    		return new Timespan(now, now);
     	}
     	
     	Instant min = null;
@@ -65,10 +67,13 @@ public class Extract {
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
         Set<String> usernames = new HashSet<String>();
         Matcher nameMatcher = null;
+        Matcher nameExtractor = null;
         for (Tweet tweet: tweets) {
         	 nameMatcher = authorRegexp.matcher(tweet.getText());
         	 while (nameMatcher.find()) {
-        		 usernames.add(nameMatcher.group().toLowerCase().trim().substring(1));
+        	     nameExtractor = authorExtractionPattern.matcher(nameMatcher.group());
+        	     nameExtractor.find();
+        		 usernames.add(nameExtractor.group().trim().toLowerCase());
         	 }
         }
         
